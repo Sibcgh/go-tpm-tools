@@ -89,8 +89,6 @@ func TestGetDefaultToken(t *testing.T) {
 }
 
 func TestGetDefaultTokenServerError(t *testing.T) {
-	// An empty attestHandler is fine for now as it is not being used
-	// in the handler.
 	ah := attestHandler{
 		logger: logging.SimpleLogger(),
 		clients: &AttestClients{
