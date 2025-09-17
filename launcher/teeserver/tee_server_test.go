@@ -128,6 +128,7 @@ func TestCustomToken(t *testing.T) {
 		want                 int
 	}{
 		{
+			// TODO change this?
 			testName: "TestNoAudiencePostRequest",
 			body: `{
 				"audience": "",
@@ -153,6 +154,7 @@ func TestCustomToken(t *testing.T) {
 			want: http.StatusInternalServerError,
 		},
 		{
+			// TODO change this?
 			testName: "TestTokenTypeRequired",
 			body: `{
 				"audience": "audience",
@@ -190,6 +192,18 @@ func TestCustomToken(t *testing.T) {
 						}
 					}
 				}
+			}`,
+			attestWithClientFunc: func(context.Context, agent.AttestAgentOpts, verifier.Client) ([]byte, error) {
+				return []byte{}, nil
+			},
+			want: http.StatusOK,
+		},
+		{
+			testName: "TestRequestNoAudienceNoNonceNoTokenType",
+			body: `{
+				"audience": "",
+				"nonces": [""],
+				"token_type": ""
 			}`,
 			attestWithClientFunc: func(context.Context, agent.AttestAgentOpts, verifier.Client) ([]byte, error) {
 				return []byte{}, nil

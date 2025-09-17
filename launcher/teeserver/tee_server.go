@@ -160,17 +160,17 @@ func (a *attestHandler) attest(w http.ResponseWriter, r *http.Request, client ve
 			return
 		}
 
-		if tokenOptions.Audience == "" {
-			err := fmt.Errorf("use GET request for the default identity token")
-			a.logAndWriteHTTPError(w, http.StatusBadRequest, err)
-			return
-		}
+		// if tokenOptions.Audience == "" {
+		// 	err := fmt.Errorf("use GET request for the default identity token")
+		// 	a.logAndWriteHTTPError(w, http.StatusBadRequest, err)
+		// 	return
+		// }
 
-		if tokenOptions.TokenType == "" {
-			err := fmt.Errorf("token_type is a required parameter")
-			a.logAndWriteHTTPError(w, http.StatusBadRequest, err)
-			return
-		}
+		// if tokenOptions.TokenType == "" {
+		// 	err := fmt.Errorf("token_type is a required parameter")
+		// 	a.logAndWriteHTTPError(w, http.StatusBadRequest, err)
+		// 	return
+		// }
 
 		// Do not check that TokenTypeOptions matches TokenType in the launcher.
 
