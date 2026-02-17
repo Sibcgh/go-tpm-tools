@@ -6,6 +6,23 @@ const (
 	WorkloadAttestationLabel = "WORKLOAD_ATTESTATION"
 )
 
+// Enums are represented as integers with a custom type
+type GpuArchitectureType int32
+
+const (
+	GPU_ARCHITECTURE_UNSPECIFIED GpuArchitectureType = 0
+	GPU_ARCHITECTURE_KEPLER      GpuArchitectureType = 1
+	GPU_ARCHITECTURE_MAXWELL     GpuArchitectureType = 2
+	GPU_ARCHITECTURE_PASCAL      GpuArchitectureType = 3
+	GPU_ARCHITECTURE_VOLTA       GpuArchitectureType = 4
+	GPU_ARCHITECTURE_TURING      GpuArchitectureType = 5
+	GPU_ARCHITECTURE_AMPERE      GpuArchitectureType = 6
+	GPU_ARCHITECTURE_ADA         GpuArchitectureType = 7
+	GPU_ARCHITECTURE_HOPPER      GpuArchitectureType = 8
+	GPU_ARCHITECTURE_UNKNOWN     GpuArchitectureType = 9
+	GPU_ARCHITECTURE_BLACKWELL   GpuArchitectureType = 10
+)
+
 // VMAttestation represents a standalone attestation over a challenge provided by the workload.
 type VMAttestation struct {
 	// Label provided by the attesting entity. For Confidential Space, this shall be "WORKLOAD_ATTESTATION".
@@ -53,8 +70,8 @@ type DeviceAttestationReport struct {
 	NvidiaReport *NvidiaAttestationReport `json:"nvidia_report,omitempty"`
 }
 
-// NVIDIAGPUAttestation holds the collection of GPU devices being attested.
 type NvidiaAttestationReport struct {
+	// CcFeature handles the 'oneof' field.
 	CcFeature IsNvidiaCcFeature `json:"cc_feature"`
 }
 
@@ -62,22 +79,21 @@ type IsNvidiaCcFeature interface {
 	isNvidiaCcFeature()
 }
 
-// SinglePassthroughAttestation is a placeholder for the 'spt' field (tag 1).
-type SinglePassthroughAttestation struct{}
-
-func (*SinglePassthroughAttestation) isNvidiaCcFeature() {}
-
-// ProtectedPcieAttestation is a placeholder for the 'ppcie' field (tag 2).
-type ProtectedPcieAttestation struct{}
-
-func (*ProtectedPcieAttestation) isNvidiaCcFeature() {}
-
-// MultiGpuSecurePassthroughAttestation mirrors the 'mpt' field (tag 3).
+// MultiGpuSecurePassthroughAttestation implementation
 type MultiGpuSecurePassthroughAttestation struct {
 	GpuQuotes []GpuInfo `json:"gpu_quotes"`
 }
 
 func (*MultiGpuSecurePassthroughAttestation) isNvidiaCcFeature() {}
+
+// Add markers for the other oneof types
+type SinglePassthroughAttestation struct{}
+
+func (*SinglePassthroughAttestation) isNvidiaCcFeature() {}
+
+type ProtectedPcieAttestation struct{}
+
+func (*ProtectedPcieAttestation) isNvidiaCcFeature() {}
 
 // TPMAttestationEndorsement represents the endorsement of a TPM attestation.
 type TPMAttestationEndorsement struct {
