@@ -54,7 +54,7 @@ type DeviceAttestationReport struct {
 }
 
 // NVIDIAGPUAttestation holds the collection of GPU devices being attested.
-type NVIDIAGPUAttestation struct {
+type NvidiaAttestationReport struct {
 	CcFeature IsNvidiaCcFeature `json:"cc_feature"`
 }
 
