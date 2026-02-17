@@ -65,13 +65,11 @@ type TDXCCELQuote struct {
 }
 
 // DeviceAttestationReport represents an attestation report from a device.
-// TODO: Define this.
 type DeviceAttestationReport struct {
 	NvidiaReport *NvidiaAttestationReport `json:"nvidia_report,omitempty"`
 }
 
 type NvidiaAttestationReport struct {
-	// CcFeature handles the 'oneof' field.
 	CcFeature IsNvidiaCcFeature `json:"cc_feature"`
 }
 
@@ -79,21 +77,33 @@ type IsNvidiaCcFeature interface {
 	isNvidiaCcFeature()
 }
 
-// MultiGpuSecurePassthroughAttestation implementation
+type NvidiaAttestationReport_Spt struct {
+	Spt *SinglePassthroughAttestation `json:"spt,omitempty"`
+}
+
+type NvidiaAttestationReport_Ppcie struct {
+	Ppcie *ProtectedPcieAttestation `json:"ppcie,omitempty"`
+}
+
+type NvidiaAttestationReport_Mpt struct {
+	Mpt *MultiGpuSecurePassthroughAttestation `json:"mpt,omitempty"`
+}
+
+// Markers to satisfy the interface.
+func (*NvidiaAttestationReport_Spt) isNvidiaCcFeature()   {}
+func (*NvidiaAttestationReport_Ppcie) isNvidiaCcFeature() {}
+func (*NvidiaAttestationReport_Mpt) isNvidiaCcFeature()   {}
+
+// SinglePassthroughAttestation is a placeholder for the 'spt' field.
+type SinglePassthroughAttestation struct{}
+
+// ProtectedPcieAttestation is a placeholder for the 'ppcie' field.
+type ProtectedPcieAttestation struct{}
+
+// MultiGpuSecurePassthroughAttestation contains the actual GPU quotes.
 type MultiGpuSecurePassthroughAttestation struct {
 	GpuQuotes []GpuInfo `json:"gpu_quotes"`
 }
-
-func (*MultiGpuSecurePassthroughAttestation) isNvidiaCcFeature() {}
-
-// Add markers for the other oneof types
-type SinglePassthroughAttestation struct{}
-
-func (*SinglePassthroughAttestation) isNvidiaCcFeature() {}
-
-type ProtectedPcieAttestation struct{}
-
-func (*ProtectedPcieAttestation) isNvidiaCcFeature() {}
 
 // TPMAttestationEndorsement represents the endorsement of a TPM attestation.
 type TPMAttestationEndorsement struct {
