@@ -24,7 +24,7 @@ const (
 	GPU_ARCHITECTURE_BLACKWELL   GPUArchitectureType = 10 // Blackwell architecture.
 )
 
-// The following values are based on NVIDIA's GPU architecture generations, but with the UNKNOWN and UNSPECIFIED values swapped.
+// String returns the string representation of a GPUArchitectureType based upon value.
 func (g GPUArchitectureType) String() string {
 	switch g {
 	case GPU_ARCHITECTURE_KEPLER:
