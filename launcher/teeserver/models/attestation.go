@@ -6,23 +6,25 @@ const (
 	WorkloadAttestationLabel = "WORKLOAD_ATTESTATION"
 )
 
-// Enums are represented as integers with a custom type
+// GPUArchitectureType enums are represented as integers with a custom type
 type GPUArchitectureType int32
 
+// The following values are based on NVIDIA's GPU architecture generations.
 const (
-	GPU_ARCHITECTURE_UNSPECIFIED GPUArchitectureType = 0
-	GPU_ARCHITECTURE_KEPLER      GPUArchitectureType = 1
-	GPU_ARCHITECTURE_MAXWELL     GPUArchitectureType = 2
-	GPU_ARCHITECTURE_PASCAL      GPUArchitectureType = 3
-	GPU_ARCHITECTURE_VOLTA       GPUArchitectureType = 4
-	GPU_ARCHITECTURE_TURING      GPUArchitectureType = 5
-	GPU_ARCHITECTURE_AMPERE      GPUArchitectureType = 6
-	GPU_ARCHITECTURE_ADA         GPUArchitectureType = 7
-	GPU_ARCHITECTURE_HOPPER      GPUArchitectureType = 8
-	GPU_ARCHITECTURE_UNKNOWN     GPUArchitectureType = 9
-	GPU_ARCHITECTURE_BLACKWELL   GPUArchitectureType = 10
+	GPU_ARCHITECTURE_UNSPECIFIED GPUArchitectureType = 0  // Unspecified architecture.
+	GPU_ARCHITECTURE_KEPLER      GPUArchitectureType = 1  // Kepler architecture.
+	GPU_ARCHITECTURE_MAXWELL     GPUArchitectureType = 2  // Maxwell architecture.
+	GPU_ARCHITECTURE_PASCAL      GPUArchitectureType = 3  // Pascal architecture.
+	GPU_ARCHITECTURE_VOLTA       GPUArchitectureType = 4  // Volta architecture.
+	GPU_ARCHITECTURE_TURING      GPUArchitectureType = 5  // Turing architecture.
+	GPU_ARCHITECTURE_AMPERE      GPUArchitectureType = 6  // Ampere architecture.
+	GPU_ARCHITECTURE_ADA         GPUArchitectureType = 7  // Ada architecture.
+	GPU_ARCHITECTURE_HOPPER      GPUArchitectureType = 8  // Hopper architecture.
+	GPU_ARCHITECTURE_UNKNOWN     GPUArchitectureType = 9  // Unknown architecture.
+	GPU_ARCHITECTURE_BLACKWELL   GPUArchitectureType = 10 // Blackwell architecture.
 )
 
+// The following values are based on NVIDIA's GPU architecture generations, but with the UNKNOWN and UNSPECIFIED values swapped.
 func (g GPUArchitectureType) String() string {
 	switch g {
 	case GPU_ARCHITECTURE_KEPLER:
@@ -46,9 +48,9 @@ func (g GPUArchitectureType) String() string {
 	case GPU_ARCHITECTURE_BLACKWELL:
 		return "GPU_ARCHITECTURE_BLACKWELL"
 	case GPU_ARCHITECTURE_UNSPECIFIED:
-		fallthrough
-	default:
 		return "GPU_ARCHITECTURE_UNSPECIFIED"
+	default:
+		return "GPU_ARCHITECTURE_UNKNOWN"
 	}
 }
 
@@ -98,31 +100,24 @@ type DeviceAttestationReport struct {
 	NvidiaReport *NvidiaAttestationReport `json:"nvidia_report,omitempty"`
 }
 
+// NvidiaAttestationReport represents the attestation report for NVIDIA GPUs, which may include SPT or MPT reports.
 type NvidiaAttestationReport struct {
-	CcFeature IsNvidiaCcFeature `json:"cc_feature"`
+	Spt *SinglePassthroughAttestation         `json:"spt,omitempty"` // SPT attestation report, if applicable.
+	Mpt *MultiGpuSecurePassthroughAttestation `json:"mpt,omitempty"` // MPT attestation report, if applicable.
 }
 
-type IsNvidiaCcFeature interface {
-	isNvidiaCcFeature()
-}
-
+// NvidiaAttestationReport_Spt represents the SPT attestation report for NVIDIA GPUs.
 type NvidiaAttestationReport_Spt struct {
 	Spt *SinglePassthroughAttestation `json:"spt,omitempty"`
 }
 
+// NvidiaAttestationReport_Mpt represents the MPT attestation report for NVIDIA GPUs, containing multiple GPU quotes.
 type NvidiaAttestationReport_Mpt struct {
 	Mpt *MultiGpuSecurePassthroughAttestation `json:"mpt,omitempty"`
 }
 
-// Markers to satisfy the interface.
-func (*NvidiaAttestationReport_Spt) isNvidiaCcFeature() {}
-func (*NvidiaAttestationReport_Mpt) isNvidiaCcFeature() {}
-
 // SinglePassthroughAttestation is a placeholder for the 'spt' field.
 type SinglePassthroughAttestation struct{}
-
-// ProtectedPcieAttestation is a placeholder for the 'ppcie' field.
-type ProtectedPcieAttestation struct{}
 
 // MultiGpuSecurePassthroughAttestation contains the actual GPU quotes.
 type MultiGpuSecurePassthroughAttestation struct {
