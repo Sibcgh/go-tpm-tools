@@ -102,8 +102,8 @@ type DeviceAttestationReport struct {
 
 // NvidiaAttestationReport represents the attestation report for NVIDIA GPUs, which may include SPT or MPT reports.
 type NvidiaAttestationReport struct {
-	Spt *SinglePassthroughAttestation         `json:"spt,omitempty"` // SPT attestation report, if applicable.
-	Mpt *MultiGpuSecurePassthroughAttestation `json:"mpt,omitempty"` // MPT attestation report, if applicable.
+	Spt *SinglePassthroughAttestation         `json:"spt,omitempty"` // Single GPU Passthrough (SPT) attestation report
+	Mpt *MultiGpuSecurePassthroughAttestation `json:"mpt,omitempty"` //  Multiple GPU Passthrough (MPT) attestation report
 }
 
 // NvidiaAttestationReport_Spt represents the SPT attestation report for NVIDIA GPUs.
