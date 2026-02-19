@@ -7,21 +7,50 @@ const (
 )
 
 // Enums are represented as integers with a custom type
-type GpuArchitectureType int32
+type GPUArchitectureType int32
 
 const (
-	GPU_ARCHITECTURE_UNSPECIFIED GpuArchitectureType = 0
-	GPU_ARCHITECTURE_KEPLER      GpuArchitectureType = 1
-	GPU_ARCHITECTURE_MAXWELL     GpuArchitectureType = 2
-	GPU_ARCHITECTURE_PASCAL      GpuArchitectureType = 3
-	GPU_ARCHITECTURE_VOLTA       GpuArchitectureType = 4
-	GPU_ARCHITECTURE_TURING      GpuArchitectureType = 5
-	GPU_ARCHITECTURE_AMPERE      GpuArchitectureType = 6
-	GPU_ARCHITECTURE_ADA         GpuArchitectureType = 7
-	GPU_ARCHITECTURE_HOPPER      GpuArchitectureType = 8
-	GPU_ARCHITECTURE_UNKNOWN     GpuArchitectureType = 9
-	GPU_ARCHITECTURE_BLACKWELL   GpuArchitectureType = 10
+	GPU_ARCHITECTURE_UNSPECIFIED GPUArchitectureType = 0
+	GPU_ARCHITECTURE_KEPLER      GPUArchitectureType = 1
+	GPU_ARCHITECTURE_MAXWELL     GPUArchitectureType = 2
+	GPU_ARCHITECTURE_PASCAL      GPUArchitectureType = 3
+	GPU_ARCHITECTURE_VOLTA       GPUArchitectureType = 4
+	GPU_ARCHITECTURE_TURING      GPUArchitectureType = 5
+	GPU_ARCHITECTURE_AMPERE      GPUArchitectureType = 6
+	GPU_ARCHITECTURE_ADA         GPUArchitectureType = 7
+	GPU_ARCHITECTURE_HOPPER      GPUArchitectureType = 8
+	GPU_ARCHITECTURE_UNKNOWN     GPUArchitectureType = 9
+	GPU_ARCHITECTURE_BLACKWELL   GPUArchitectureType = 10
 )
+
+func (g GPUArchitectureType) String() string {
+	switch g {
+	case GPU_ARCHITECTURE_KEPLER:
+		return "GPU_ARCHITECTURE_KEPLER"
+	case GPU_ARCHITECTURE_MAXWELL:
+		return "GPU_ARCHITECTURE_MAXWELL"
+	case GPU_ARCHITECTURE_PASCAL:
+		return "GPU_ARCHITECTURE_PASCAL"
+	case GPU_ARCHITECTURE_VOLTA:
+		return "GPU_ARCHITECTURE_VOLTA"
+	case GPU_ARCHITECTURE_TURING:
+		return "GPU_ARCHITECTURE_TURING"
+	case GPU_ARCHITECTURE_AMPERE:
+		return "GPU_ARCHITECTURE_AMPERE"
+	case GPU_ARCHITECTURE_ADA:
+		return "GPU_ARCHITECTURE_ADA"
+	case GPU_ARCHITECTURE_HOPPER:
+		return "GPU_ARCHITECTURE_HOPPER"
+	case GPU_ARCHITECTURE_UNKNOWN:
+		return "GPU_ARCHITECTURE_UNKNOWN"
+	case GPU_ARCHITECTURE_BLACKWELL:
+		return "GPU_ARCHITECTURE_BLACKWELL"
+	case GPU_ARCHITECTURE_UNSPECIFIED:
+		fallthrough
+	default:
+		return "GPU_ARCHITECTURE_UNSPECIFIED"
+	}
+}
 
 // VMAttestation represents a standalone attestation over a challenge provided by the workload.
 type VMAttestation struct {
@@ -81,18 +110,13 @@ type NvidiaAttestationReport_Spt struct {
 	Spt *SinglePassthroughAttestation `json:"spt,omitempty"`
 }
 
-type NvidiaAttestationReport_Ppcie struct {
-	Ppcie *ProtectedPcieAttestation `json:"ppcie,omitempty"`
-}
-
 type NvidiaAttestationReport_Mpt struct {
 	Mpt *MultiGpuSecurePassthroughAttestation `json:"mpt,omitempty"`
 }
 
 // Markers to satisfy the interface.
-func (*NvidiaAttestationReport_Spt) isNvidiaCcFeature()   {}
-func (*NvidiaAttestationReport_Ppcie) isNvidiaCcFeature() {}
-func (*NvidiaAttestationReport_Mpt) isNvidiaCcFeature()   {}
+func (*NvidiaAttestationReport_Spt) isNvidiaCcFeature() {}
+func (*NvidiaAttestationReport_Mpt) isNvidiaCcFeature() {}
 
 // SinglePassthroughAttestation is a placeholder for the 'spt' field.
 type SinglePassthroughAttestation struct{}
@@ -102,7 +126,7 @@ type ProtectedPcieAttestation struct{}
 
 // MultiGpuSecurePassthroughAttestation contains the actual GPU quotes.
 type MultiGpuSecurePassthroughAttestation struct {
-	GpuQuotes []GpuInfo `json:"gpu_quotes"`
+	GPUQuotes []GPUInfo `json:"gpu_quotes"`
 }
 
 // TPMAttestationEndorsement represents the endorsement of a TPM attestation.
@@ -158,12 +182,12 @@ type SignedQuote struct {
 	TPMTSignature []byte            `json:"tpmt_signature"` // Contains the signature.
 }
 
-// GPUDevice contains the specific hardware identity and evidence for a single GPU.
-type GpuInfo struct {
-	DeviceUuid                     string `json:"device_uuid"`
-	DriverVersion                  string `json:"driver_version"`
-	VbiosVersion                   string `json:"vbios_version"`
-	GpuArchitectureType            string `json:"gpu_architecture_type"`
-	RawAttestationCertificateChain []byte `json:"raw_attestation_certificate_chain"`
-	RawAttestationReport           []byte `json:"raw_attestation_report"`
+// GPUInfo contains the specific hardware identity and evidence for a single GPU.
+type GPUInfo struct {
+	UUID                        string `json:"uuid"`                          // The UUID of the GPU device.
+	DriverVersion               string `json:"driver_version"`                // The driver version of the GPU.
+	VBIOSVersion                string `json:"vbios_version"`                 // The VBIOS version of the GPU.
+	GPUArchitectureType         string `json:"gpu_architecture_type"`         // The architecture type of the GPU.
+	AttestationCertificateChain []byte `json:"attestation_certificate_chain"` // The raw certificate chain for attestation.
+	AttestationReport           []byte `json:"attestation_report"`            // The raw attestation report for the GPU.
 }
